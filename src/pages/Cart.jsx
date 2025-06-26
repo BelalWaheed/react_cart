@@ -5,22 +5,25 @@ import {
   increaseN,
   removeFromCart,
   decreaseN,
+  updateTotal,
 } from "../../redux/slices/productsSlice";
 
 import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
 import { TiDelete } from "react-icons/ti";
 import { ShoppingBagIcon } from "@heroicons/react/16/solid";
+import { useEffect } from "react";
 
 export default function Cart() {
   const dispatch = useDispatch();
-  const { cart } = useSelector((state) => state.products);
+  const { cart, total } = useSelector((state) => state.products);
   const subtotal = cart.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
   const tax = subtotal * 0.14;
-  const total = subtotal + tax;
-
+  useEffect(() => {
+    dispatch(updateTotal());
+  }, [cart]);
   return (
     <div className="min-h-screen  bg-gradient-to-r from-gray-900 via-[#241939] to-black  text-white px-4 py-12">
       {cart.length > 0 ? (

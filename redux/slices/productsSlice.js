@@ -101,12 +101,21 @@ const initialState = {
     },
   ],
   cart: [],
+  total: 0,
 };
 
 const productsSlice = createSlice({
   name: "items",
   initialState,
   reducers: {
+    updateTotal: (state) => {
+      const subtotal = state.cart.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+      const tax = subtotal * 0.14;
+      state.total = subtotal + tax;
+    },
     addProduct: (state, { payload }) => {
       const productInItems = state.items.find((item) => item.id === payload.id);
       const productInCart = state.cart.find((item) => item.id === payload.id);
@@ -154,5 +163,5 @@ const productsSlice = createSlice({
 });
 
 export const products = productsSlice.reducer;
-export const { addProduct, increaseN, decreaseN, removeFromCart } =
+export const { addProduct, increaseN, decreaseN, removeFromCart, updateTotal } =
   productsSlice.actions;
